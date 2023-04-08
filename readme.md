@@ -2,5 +2,5 @@
 ---
 
 ### Dependencias y versiones
-* Go version:  1.19
+* Go version:  1.20
 
