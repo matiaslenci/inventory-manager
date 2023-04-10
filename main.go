@@ -1,8 +1,10 @@
 package main
 
 import (
-	"log"
+	"context"
 
+	"github.com/jmoiron/sqlx"
+	"github.com/matiaslenci/inventory-manager/database"
 	"github.com/matiaslenci/inventory-manager/settings"
 	"go.uber.org/fx"
 )
@@ -12,12 +14,18 @@ func main() {
 	app := fx.New(
 		//Define los proveedores de dependencias, en este caso "settings.New", que es una función que crea una nueva instancia de la estructura de configuración definida en el paquete "settings".
 		fx.Provide(
+			context.Background,
 			settings.New,
+			database.New,
 		),
 		// Define los invocadores de dependencias con una función anónima que toma la estructura de configuración creada anteriormente y la registra en el registro de logs.
 		fx.Invoke(
-			func(s *settings.Settings) {
-				log.Println(s)
+			func(db *sqlx.DB) {
+				_, err := db.Query("select * from USERS")
+				if err != nil {
+					panic(err)
+				}
+
 			},
 		),
 	)
